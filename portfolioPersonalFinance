@@ -1,0 +1,991 @@
+import math
+#check interet rate rounding to 12.27 for ex
+#work it out so questions change whether you are talking about a loan, deposit, investment etc
+
+def  Main():
+  print "The time value of money refers to the bidirectional nature of money value as it fluctuates up and down over the time span. "
+  print "In general, the more time that passes, the less your current dollar is worth. Wouldn't you rather have $100 today then $120 in one year?"
+  print "In the absence of the interest rate effect: money tends to have a higher value in the present compared to a lower value in the future."
+  print "In the presence of interest rate effect: money tends to increase over time due to the compensatory factor of the interest as a reward for giving up money services (giving up current money benefits in favor of future consumption)." 
+  print "This compensatory function is technically represented by the compounding process." 
+
+
+
+def InflationCPICalculation():
+  #Scrapes inflation CPI indexes for the last 60 years for United States, make as a dictionary with years as strings
+  CPI= {"2011": 152.4,"2013":193.8}
+  print "Say you know you bought a car for $10,000 in 2010. If you wanted to know how much that would cost now given inflation, used the function below."
+  Year= raw_input("What year did you buy the item")
+  Cost=input("How much did the item cost then")
+  YearToCompare=raw_input("What year are you comparing this to?")
+  EstimatedCost=float(Cost*CPI[YearToCompare])/CPI[Year]
+  ChangeCost=Cost-EstimatedCost
+  ChangeInflation=float(CPI[YearToCompare]-CPI[Year])/CPI[Year]
+  print "---------------------------------------------------------------------------------------------------------------"
+  print "The cost of the item was $"+str(Cost)+" in "+Year+". In "+str(YearToCompare)+", that item would be worth $"+str(round(EstimatedCost,2))+" based on inflation levels in the United States."
+  print "The cost of the item has changed by $"+str(round(ChangeCost,2))
+  print "Change CPI is "+str(round(ChangeInflation,2))
+
+def IsMyRaiseGood():
+  #Scrapes inflation rate of the present year
+  ScrapedInflation=0.022
+  print "If your income increases from $26,000 to $27,400 at a time when inflation rate is 7%, would that make you better or worse off? Use the function below to evaluate raises given inflation."
+  WageMethod=raw_input("Are you paid by Salary or Hourly? ")
+  if WageMethod=="Salary":
+    OldSalary=input("How much did you used to make? ")
+    NewSalary=input("What is your new salary? ")
+    ChangeSalary=NewSalary-OldSalary
+    PercentageChange=ChangeSalary/OldSalary
+    BreakEvenForSalaryIncrease=OldSalary*ScrapedInflation
+    if PercentageChange<ScrapedInflation:
+      print "This raise makes you worse off because it is smaller than the rate of inflation"
+    else: print "This raise makes you better off because it is larger than the rate of inflation"
+    print "A raise of at least $"+str(round(BreakEvenForSalaryIncrease,3))+" just keeps up with inflation. This means you will be making the exact same amount as the prior year, based on the inflated future price of the current dollar."
+  else: 
+    OldHourly=input("How much did you used to make per hour? Please enter $15/hr as 15 ")
+    NewHourly=input("How much will you make per hour after the raise? Please enter $15/hr as 15 ")
+    HoursPerWeek=input("How many hours per week do you typically work?")
+    OldSalary=OldHourly*HoursPerWeek*52.0
+    NewSalary=NewHourly*HoursPerWeek*52.0
+    ChangeSalary=NewSalary-OldSalary
+    PercentageChange=ChangeSalary/OldSalary
+    BreakEvenForSalaryIncrease=OldSalary*ScrapedInflation
+    BreakEvenForHourlyIncrease=BreakEvenForSalaryIncrease/(52.0*HoursPerWeek)
+    if PercentageChange<ScrapedInflation:
+      print "This raise makes you worse off because it is smaller than the rate of inflation"
+    else: print "This raise makes you better off because it is larger than the rate of inflation"
+    print "A raise of at least $"+str(round(BreakEvenForHourlyIncrease,2))+" per hour just keeps up with inflation. This means you will be making the exact same amount as the prior year, based on the inflated future price of the current dollar."
+  
+
+
+def RealNominalIncome():
+  #Scrapes inflation CPI indexes for the last 20 years for United States, make as a dictionary with years as strings
+  CPI={"2015":125}
+  print "Nominal income (NI), also called money income, is your income without the cost of living consideration."
+  print "Real income (RI) is income in consideration of cost of living represented by change in prices or CPI (in other words, the amount of goods and services nominal income can buy)"
+  print "If nominal income is $28,900 and the CPI is 125, what would the real income be?. Use the function below to determine your real income"
+  NominalIncome=input("How much do you make a year")
+  Year=raw_input("In what year did you make this much")
+  RealIncome=NominalIncome/float(CPI[Year])*100
+  print "Your real income adjusted for inflation (the price of living) is $"+str(RealIncome)
+
+
+def SimpleInterestCalculations():
+  Period={"Monthly":12.0,"Weekly":52.0,"Quarterly":4.0,"Yearly":1.0}
+  PeriodNoun={"Months":12.0,"Weeks":52.0,"Quarters":4.0,"Years":1.0}
+  AskUser= raw_input("Are you wondering how much interest you have earned on a past deposit? Y/N")
+  if AskUser=='Y':
+    print "What would the total interest be on a deposit of $2,000 for 5 years in a savings account bearing annually 3.5% simple interest?"
+    CV=input("How much did you deposit ")
+    Time=raw_input("Is your interest Yearly, Quarterly, Monthly, or Weekly ")
+    Years=input("How many years/quarters/months/weeks ago did you deposit it ")
+    InterestRate=input("At what interest rate did you deposit it at? Please enter as a decimal i.e 3.5% is 0.035 ")
+    YearFrac=Years/Period[Time]
+    InterestEarned=CV*InterestRate*YearFrac
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "You have earned "+str(InterestEarned)+" on your initial "+str(CV)+" investment"
+  AskUser= raw_input("Are you wondering how much you would need to invest now to get a desired amount in the future at a given interet rate and for a time period ? Y/N")
+  if AskUser=='Y':
+    print "How much should you deposit at 6% simple interest in order to collect $1000 in interest after 4 years?"
+    Time=raw_input("Is your interest Yearly, Quarterly, Monthly, or Weekly ")
+    Years=input("How many years/quarters/months/weeks in the future can you wait before collecting your initial deposit ")
+    InterestRate=input("At what interest rate did you deposit it at? Please enter as a decimal i.e 3.5% is 0.035 ")
+    DesiredInterest=input("How much in interest are you hoping to earn? ")
+    CV=DesiredInterest/float(InterestRate*YearFrac)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "You would need to deposit $"+str(round(CV,2))+" to earn $"+str(round(DesiredInterest))+" in "+str(float(Years*Period[Time]))+" years"
+  AskUser= raw_input("Are you wondering what the future value of a deposit will be? Y/N ")
+  if AskUser=='Y':
+    print "You borrowed $900 for 16 months at an annual simple interest of 7%. How much would the amount of payoff be?"
+    Time=raw_input("Is your interest Yearly, Quarterly, Monthly, or Weekly ")
+    Years=input("How many years/quarters/months/weeks in the future can you wait before collecting your initial deposit ")
+    InterestRate=input("At what interest rate did you deposit it at? Please enter as a decimal i.e 3.5% is 0.035 ")
+    CV=input("How much did you deposit ")
+    YearFrac=Years/Period[Time]
+    FV=CV*(1+InterestRate*(YearFrac))
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "The future value of your initial investmnet of $"+str(round(CV,2))+" is $"+str(round(FV,2))+" after "+str(round(YearFrac,2))+" years"
+  AskUser= raw_input("Are you wondering what interest rate would give you a desired future amount given how much you have to deposit right now? Y/N ")
+  if AskUser=='Y':
+    print "You have $6,218 now and want $7500 in 2.5 years. What interest rate would give you this desired amount?" 
+    Years=input("How many months in the future can you wait before collecting your initial deposit ")
+    CV=input("How much would you deposit ")
+    FV=input("How much would you want afterwards?")
+    YearFrac=Years/12.0
+    InterestRate=(FV/float(CV)-1)/YearFrac
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "The future value of your initial investmnet of $"+str(round(FV,2))+" can be attained from your initial $"+str(round(CV,2))+" in "+str(round(YearFrac,2))+" years at "+str(round(InterestRate,4))+"% interest"
+  AskUser= raw_input("Are you wondering how much a future value is worth right now given the time and interest rate? Y/N ")
+  if AskUser=="Y":
+    print "You have a future payment of $5,500 which is due in 8 months at an interest rate of 6.5%. How much is it worth right now?"
+    Time=raw_input("Is your interest Yearly, Quarterly, Monthly, or Weekly ")
+    Years=input("How many years/quarters/months/weeks in the future is this amount to be paid ")
+    FV=input("What is the future amount?")
+    InterestRate=input("At what interest rate did you deposit it at? Please enter as a decimal i.e 3.5% is 0.035 ")
+    YearFrac=Years/Period[Time]
+    CV=FV/float(1+(InterestRate*YearFrac))
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "The future value of $"+str(round(FV,2))+" is worth $"+str(round(CV,2))+" right now at "+str(round(InterestRate,4))+"% interest for "+str(round(YearFrac,2))+" years"
+  AskUser= raw_input("Are you wondering what the equivalent bank discount rate for a simple interest rate is? Y/N ")
+  if AskUser=="Y":
+    print "You are offered an interest rate 9.6% on a loan to be paid back in 18 months. Alternatively, she can get the ame amount at a bank discount of 8.9%. Is this better? " 
+    InterestRate=input("At what interest rate can you borrow it at? Please enter as a decimal i.e 3.5% is 0.035 ")
+    Time=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks are you borrowing it for? ")
+    YearFrac=Years/PeriodNoun[Time]
+    DiscountRate=InterestRate/(1+InterestRate*YearFrac)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "In order to recieve a desired amount for a period of "+str(round(YearFrac,2))+" years, the bank discount rate of "+str(round(DiscountRate,5))+"% is equivalent to an alternative loan at an interest rate of "+str(round(InterestRate,5))+"%."
+    
+  
+  
+def BankDiscountRate():
+  print "When a lender collects interest upfront by discounting it directly from the loan amount, it would be called a bank discount (D). The interest rate used in the discounting process is called discount rate (d) and the discounted loan or the net amount received by the borrower is called the proceeds (C)." 
+  print "Discount factor and current value of a loan/investment have a positive relationship, meaning if one increases the other does in kind. They have a negative relationship with the bank discount rate and the period of time "
+  Period={"Months":12.0,"Weeks":52.0,"Quarters":4.0,"Years":1.0}
+  AskUser= raw_input("Have you borrowed an amount at a bank dicount rate and are wondering what the proceeds would be? Y/N ")
+  if AskUser=="Y":
+    print "You borrowed $1500 for 1.5 years at a discount rate of 9.75%. How much will you recieve in proceeds? How much does the bank get? "
+    FV=input("How much are you borrowing? ")
+    Time=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks are you borrowing it for? ")
+    DiscountRate=input("At what discount rate did you borrow it at? Please enter as a decimal i.e 3.5% is 0.035 ")
+    YearFrac=Years/Period[Time]
+    BankDiscount=FV*DiscountRate*YearFrac
+    Proceeds=FV-BankDiscount
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "The borrowed amount of $"+str(round(FV,2))+" at a discount rate of "+str(round(DiscountRate,4))+"% results in the bank collecting $"+str(round(BankDiscount,2))+" and the borrower recieving $"+str(round(Proceeds,2))
+  AskUser= raw_input("Do you have an amount you need in the future and want to know how much to borrow at a bank discount rate to recieve that amount? Y/N ")
+  if AskUser=="Y":
+    print "You need $1500 and need to know how much to request from the bank at their discount rate of 9.75% for 1.5 years."
+    Proceeds=input("How much do you need from the bank?")
+    DiscountRate=input("At what discount rate can you borrow it at? Please enter as a decimal i.e 3.5% is 0.035 ")
+    Time=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks are you borrowing it for? ")
+    YearFrac=Years/Period[Time]
+    FV=Proceeds/(1-DiscountRate*YearFrac)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "You must ask for $"+str(round(FV,2))+" right now if you want a net gain of $"+str(round(Proceeds))+" and your bank is offering a discount rate of "+str(round(DiscountRate,4))+"% for "+str(round(YearFrac,2))+" years."
+  AskUser= raw_input("Are you wondering what the equivalent interest rate for a given bank discount rate is? Y/N ")
+  if AskUser=="Y":
+    print "The bank is offering you a bank discount rate of 3% for 4 years on an amount you want to borrow. You could borrow that same amount another way at an interest rate of 4% for 4 years. Is it better? " 
+    DiscountRate=input("At what discount rate can you borrow it at? Please enter as a decimal i.e 3.5% is 0.035 ")
+    Time=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks are you borrowing it for? ")
+    YearFrac=Years/Period[Time]
+    InterestRate=DiscountRate/(1-DiscountRate*YearFrac)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "In order to recieve a desired amount for a period of "+str(round(YearFrac,2))+" years, the bank discount rate of "+str(round(DiscountRate,5))+"% is equivalent to an alternative loan at an simple interest rate of "+str(round(InterestRate,5))+"%."
+
+def CompoundInterest():
+  Period={"Monthly":12.0,"Weekly":52.0,"Quarterly":4.0,"Annually":1.0,"Semianually":2.0,"Daily":365.0}
+  PeriodNoun={"Months":12.0,"Weeks":52.0,"Quarters":4.0,"Years":1.0}
+  print "Compounding is the process of accumulating interests as time goes forward, but the accumulation rate would depend on a certain conversion period."
+  print "A conversion period is a basic time limit between successive interest calculations. Common values are (1, 2, 4, 12, 52, 365) as they refer to the corresponding periodic maturity terms (anually,semianually,quarterly,monthly,weekly,daily). "
+  AskUser= raw_input("Are you wondering what the future value of a deposit will be? Y/N ")
+  if AskUser=='Y':
+    print "You borrowed $12000 for 5 years at an annual compound interest of 7.33%. How much would the amount of payoff be?"
+    CV=input("How much did you borrow/deposit ")
+    Time=raw_input("Is your interest compounded Annually, Semianually, Quarterly, Monthly, Weekly, or Daily ")
+    InterestRate=input("At what interest rate did you deposit it at? Please enter as a decimal i.e 3.5% is 0.035 ")
+    Freq=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks in the future can you wait before collecting your initial deposit ")
+    YearFrac=Years/PeriodNoun[Freq]
+    FV=CV*(1+InterestRate)**YearFrac
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "The future value of your initial investment of $"+str(round(CV,2))+" is $"+str(round(FV,2))+" after "+str(round(YearFrac,2))+" years"
+  AskUser= raw_input("Are you recieving an amount in the future and want to know how much it is worth now? Y/N ")
+  if AskUser=='Y':
+     print "You will inherit $5000 in 4 years. If you cashed in your inheritance right now, given the interest rate is 6.75% compounded annually, how much would you get?"
+     FV=input("What is the future amount?")
+     Time=raw_input("Is your interest compunded Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+     InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+     Freq=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+     Years=input("How many years/quarters/months/weeks in the future would you recieve the amount? ")
+     YearFrac=Years/PeriodNoun[Freq]
+     Denominator=1.0+InterestRate
+     CV=FV/Denominator**YearFrac
+     print "---------------------------------------------------------------------------------------------------------------"
+     print "The future value of $"+str(round(FV,2))+" is worth $"+str(round(CV,2))+" right now at "+str(round(InterestRate,4))+"% interest for "+str(round(YearFrac,2))+" years"
+  AskUser= raw_input("Are you wondering what compounded interest rate would give you a desired future amount given how much you have to deposit right now? Y/N ")
+  if AskUser=='Y':
+    print "You have $7,700 now and want $15,485 in 5 years. What interest rate would give you this desired amount?" 
+    CV=input("How much would/did you borrow/deposit ")
+    FV=input("What is the future amount?")
+    Freq=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks in the future would you recieve the amount? ")
+    YearFrac=Years/PeriodNoun[Freq]
+    Exponent=1.0/float(YearFrac)
+    InterestRate=((FV/CV)**Exponent)-1
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "The future value of your initial investmnet of $"+str(round(FV,2))+" can be attained from your initial $"+str(round(CV,2))+" in "+str(round(YearFrac,2))+" years at "+str(round(InterestRate,4))+"% interest"
+  AskUser= raw_input("Are you wondering how long it would take to get a desired future amount given an amount you have right now at a given interest rate? Y/N ")
+  if AskUser=='Y':
+    print "How long would it take to collect $13000 if you invest $6777 today at an annual compounded interest rate of 9%? "
+    CV=input("How much would/did you borrow/deposit ")
+    FV=input("What is the future amount?")
+    InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+    TotalYearsNumerator=math.log(FV/float(CV))
+    TotalYears=TotalYearsNumerator/math.log(1.0+InterestRate)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "It would take "+str(round(TotalYears,2))+" years to recieve $"+str(round(FV,2))+" if you invested $"+str(round(CV,2))+" right now" 
+  AskUser= raw_input("Do you have a stream of known future payments for a time period to payoff a particular amount of money for a loan? Are you wondering what your debts are worth right now? Y/N " )
+  if AskUser=='Y':
+    print "A loan for $5,000 will be paid back in 3 years according to this plan: Year 1 : $1,500, Year 2 : $2,000, Year 3 : $2,300, Total : $5,800. The interest rate is 11.5% compounded annually."
+    CV=input("What is the loan amount?" )
+    #FreqInternal=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+    #YearsInternal=input("How many years/quarters/months/weeks in the future do you have until all payments are paid? ")
+    FirstPayment=input("Please enter the $ value of the first payment")
+    Freq=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks in the future does this payment have to be paid off? ")
+    InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+    YearFrac=Years/PeriodNoun[Freq]
+    FirstPV=FirstPayment/(1.0+InterestRate)**YearFrac
+    ListOfPV=[FirstPV]
+    Total=0
+    TotalLoaned=FirstPayment
+    while raw_input("Are there more future payments to enter? Y/N ")=="Y":
+      OtherPayment=input("Please enter the $ value of the next incremental payment ")
+      Freq=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+      Years=input("How many years/quarters/months/weeks in the future does this payment have to be paid off? ")
+      InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+      YearFrac=Years/PeriodNoun[Freq]
+      PV=OtherPayment/(1.0+InterestRate)**YearFrac
+      ListOfPV=ListOfPV+[PV]
+      TotalLoaned=TotalLoaned+OtherPayment
+    else:
+      while raw_input("Do you want to know the value of one particular payment in the stream? Y/N ")=='Y':
+        AskUser= input("Which payment are you interested in assessing? To select the first payment of "+str(FirstPayment)+" enter 1 ")
+        SelectedValue= ListOfPV[-1+AskUser]
+        print "The current value of the "+str(AskUser)+" payment equals $"+str(round(SelectedValue,2))+"."
+      else:
+        for X in ListOfPV:
+          Total=Total+X
+          Real=TotalLoaned-Total
+          LenderGain=CV-Total
+        print "---------------------------------------------------------------------------------------------------------------"
+        print "The total present value of all of your future payments is $"+str(round(Total,2))
+        if LenderGain>0:
+          print "---------------------------------------------------------------------------------------------------------------"
+          print "Your loan of $"+str(round(CV))+" yields a loss for the lender of $"+str(round(LenderGain,2))
+        else: 
+          print "---------------------------------------------------------------------------------------------------------------"
+          print "Your loan of $"+str(round(CV))+" yields a gain for the lender of $"+str(round(LenderGain,2))
+      
+    
+
+
+def RuleOf72():
+  print "Rule of 72: A general approximating method to estimate the number of years for which a principal would double given a certain interest rate"
+  MultiplierInput=input("You want to know how long it will take for your investment to multiply by what factor? i.e For an investment to quadruple enter 4: ")
+  Multiplier=MultiplierInput
+  MultiplierFactors=[]
+  AdditiveStreamOfMultipliers=0
+  while Multiplier%5==0:
+    MultiplierFactors=MultiplierFactors+[5]
+    Multiplier=Multiplier/5
+  while Multiplier%3==0: 
+    MultiplierFactors=MultiplierFactors+[3]
+    Multiplier=Multiplier/3
+  while Multiplier%2==0: 
+    MultiplierFactors=MultiplierFactors+[2]
+    Multiplier=Multiplier/2  
+  if Multiplier!=1:
+    print "Can't be done via this method as it is not a factor of 2,3 or 5"
+  else:
+    InterestRate=input("At what interest rate would you invest/borrow? Please enter as a number i.e 3.5% is 3.5 ")
+    for X in MultiplierFactors:
+      if X==2:
+        AdditiveStreamOfMultipliers=AdditiveStreamOfMultipliers+72/float(InterestRate)
+      elif X==3:
+        AdditiveStreamOfMultipliers=AdditiveStreamOfMultipliers+114/float(InterestRate)
+      elif X==5:
+        AdditiveStreamOfMultipliers=AdditiveStreamOfMultipliers+167/float(InterestRate)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "Your investment would increase by a factor of "+str(MultiplierInput)+" in "+str(round(AdditiveStreamOfMultipliers,2))+" years"
+
+def EffectiveInterestRate():
+  Period={"Daily":365.0,"Monthly":12.0,"Weekly":52.0,"Quarterly":4.0,"Semiannually":2.0,"Annually":1.0}
+  print "The effective interest rate is obtained according to the conversion process (m) used in the compounding process"
+  print "If the stated interest rate is 6%, then the effective interest rate would be"
+  InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+  Freq=raw_input("This rate is compounded Annually/Semiannually/Quarterly/Weekly/Daily? ")
+  PortionR=InterestRate/Period[Freq]
+  RPart=(1+PortionR)**Period[Freq]
+  RFinal=RPart-1.0
+  print "---------------------------------------------------------------------------------------------------------------"
+  print "The effective rate is "+str(round(RFinal,5))+"% compared to the nominal or stated interest rate (APR) of "+str(round(InterestRate,3))+"%"
+
+     
+def EquationofValueCompounded():
+  Period={"Daily":365.0,"Monthly":12.0,"Weekly":52.0,"Quarterly":4.0,"Semiannually":2.0,"Annually":1.0}
+  PeriodNoun={"Months":12.0,"Weeks":52.0,"Quarters":4.0,"Years":1.0}
+  print "Equation of Value & Focal date when interest is compounded"
+  print "You borrowed $10,500 to be paid in 2 years with 7.75% interest compounded monthly. After 8 months you decided to pay $3,000, and also paid $2,500, seven months after the first payment. How much do you still owe on the original maturity date?"
+  CV=input("How much did you borrow? ")
+  Freq=raw_input("Would you like to enter the payback period in Years, Quarters, Months, or Weeks? ")
+  Years=input("How many years/quarters/months/weeks in the future do you have to pay off this ammount? ")
+  YearFrac=Years/PeriodNoun[Freq]
+  Time=raw_input("Is your interest compounded Annually, Semianually, Quarterly, Monthly, Weekly, or Daily ")
+  InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+  TotalFVPart=1.0+InterestRate/Period[Time]
+  OtherTotalFVPart=Period[Time]*Years
+  ActualTotalFV=CV*(TotalFVPart**OtherTotalFVPart)
+  ListOfFutureValues=[]
+  ListOfPayments=[]
+  Accumulator=0
+  while raw_input("Did you pay off a portion of this borrowed amount early? Y/N ")=="Y":
+    Freq=raw_input("Would you like to enter your early payment period in Years, Quarters, Months, or Weeks? ")
+    Year=input("How many years/quarters/months/weeks from the time you borrowed it did you pay this portion of the total amount? ")
+    EarlyPayment=input("How much did you pay off at this time? ")
+    ListOfPayments=ListOfPayments+[EarlyPayment]
+    TotalFVPart=1.0+InterestRate/Period[Time]
+    OtherTotalFVPart=Period[Time]*Years-Year
+    TotalFV=EarlyPayment*(TotalFVPart**OtherTotalFVPart)
+    ListOfFutureValues=ListOfFutureValues+[TotalFV]
+  while raw_input("Do you want to know the future value of one particular payment you made in the stream? Y/N ")=='Y':
+    AskUser= input("Which payment are you interested in assessing? To select the first payment of "+str(ListOfPayments[0])+" enter 1 ")
+    SelectedValue= ListOfFutureValues[-1+AskUser]
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "The future value of the "+str(AskUser)+" payment equals $"+str(round(SelectedValue,2))+"."
+  for X in ListOfFutureValues:
+    Accumulator=Accumulator+X
+  WhatIsOwed=ActualTotalFV-Accumulator
+  print "---------------------------------------------------------------------------------------------------------------"
+  print "Of the total $"+str(round(CV,2))+" you borrowed, it's future value is $"+str(round(ActualTotalFV,2))+" and you've paid the equivalent of $"+str(round(Accumulator,2))+". The remaining balance is only $"+str(round(WhatIsOwed,2))
+  
+  
+def Annuities():
+  Period={"Daily":365.0,"Monthly":12.0,"Weekly":52.0,"Quarterly":4.0,"Semiannually":2.0,"Annually":1.0}
+  PeriodNoun={"Months":12.0,"Weeks":52.0,"Quarters":4.0,"Years":1.0}
+  TimePeriod={"Daily":"days","Monthly":"months","Weekly":"weeks","Quarterly":"quarters","Semiannually":"half years","Annually":"years"}
+  TimePeriodDue={"Daily":"day","Monthly":"month","Weekly":"week","Quarterly":"quarter","Semiannually":"half year","Annually":"year"}
+  print "An annuity is any set of periodic equal payments made at equal intervals of time. It could be cash inflow or cash outflow such as deposits of savings or payments of obligations such as for mortgages, purchases on installments, loans, or insurance premiums. "
+  print "Types of annuities: 1.) Ordinary Annuity: where payments are made at the end of the interval period. 2.) Annuity Due: where payments are made at the beginning of the interval period. 3.) Deferred Annuity: an ordinary annuity but with a deferred term." 
+  AskUser= raw_input("Have you been paying a series of payments and are wondering how much they will be worth? Y/N ")
+  if AskUser=='Y':
+    print "At age 25 you started to contributing to your retirement account by monthly contributions of $100. If your IRA pays 6.25% interest compounded semi-annually, how much will you collect when you retire at 65, and how much will you have made on his investment?"
+    Freq=raw_input("Would you like to enter the period of time until the payments stop in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks in the future will you stop paying this amount? ")
+    AnnuityTime=raw_input("Are you contributing Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    AnnuityInput=input("How much are you paying Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    InterestTime=raw_input("Is your interest compounded Annually, Semianually, Quarterly, Monthly, Weekly, or Daily ")
+    InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+    AnnuityDue=raw_input("Is your payment made at the beginning of each "+str(TimePeriodDue[AnnuityTime])+" or the end? Enter Beginning/End ")
+    YearFrac=Years/PeriodNoun[Freq]
+    Annuity=AnnuityInput*Period[AnnuityTime]*(1/Period[InterestTime])
+    Maturity=YearFrac*Period[InterestTime]
+    FVPart1=InterestRate/Period[InterestTime]
+    FVPart2=(1.0+FVPart1)**Maturity
+    if AnnuityDue=="Beginning":
+      FVPart3=(Annuity*(FVPart2-1.0))/float(FVPart1)
+      FVFinal=FVPart3*(1.0+FVPart1)
+    else:
+      FVFinal=(Annuity*(FVPart2-1.0))/float(FVPart1)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "Your "+str(AnnuityTime)+" payments of $"+str(round(AnnuityInput,2))+" over "+str(round(YearFrac,2))+" years will be worth $"+str(round(FVFinal,2))
+  AskUser= raw_input("Will you be recieving a series of equivalent future payments for a specified time period and want to know how much they would all be worth right now? Y/N ")
+  if AskUser=='Y':
+    print "You want to cash in your trust fund that pays $500 a month for the next 10 years. The interest on the fund is 6.5% compounded monthly. How much would you receive?"
+    Freq=raw_input("Would you like to enter the period of time until the payments stop in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks in the future will the payments stop? ")
+    AnnuityTime=raw_input("Are you earning payments Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    AnnuityInput=input("How much are you earning Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    InterestTime=raw_input("Is your interest compounded Annually, Semianually, Quarterly, Monthly, Weekly, or Daily ")
+    InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+    AnnuityDue=raw_input("Is your payment made at the beginning of each "+str(TimePeriodDue[AnnuityTime])+" or the end? Enter Beginning/End ")
+    YearFrac=Years/PeriodNoun[Freq]
+    Annuity=AnnuityInput*Period[AnnuityTime]*(1/Period[InterestTime])
+    Maturity=YearFrac*Period[InterestTime]
+    AdjustedInterest=round(InterestRate/float(Period[InterestTime]),4)
+    CVPart2=(1.0+AdjustedInterest)**-Maturity
+    if AnnuityDue=="Beginning":
+      CVPart3=(Annuity*(1.0-CVPart2))/float(AdjustedInterest)
+      CVFinal=CVPart3*(1.0+AdjustedInterest)
+    else:
+      CVFinal=(Annuity*(1.0-CVPart2))/float(AdjustedInterest)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "Your "+str(AnnuityTime)+" earnings of $"+str(round(AnnuityInput,2))+" paid to you over "+str(round(YearFrac,2))+" years is worth $"+str(round(CVFinal,2))+" right now"
+  AskUser= raw_input("Are you wondering how much you would have to save right now per day/week/month/quarter/year to earn a desired amount in the future ? Y/N ")
+  if AskUser=='Y':
+    print "You are planning to buy a new car for $17,000 upon your graduation 5 years from now. You are investing in an account paying 7% interest compounded monthly. How much a month should you be depositing?"
+    Freq=raw_input("Would you like to enter the period of time until you earn the desired amount in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks in the future will you earn the desired amount? ")
+    FV=input("How much would you like to recieve at the end of this time period? ")
+    AnnuityTime=raw_input("Do you want to make deposits Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    InterestTime=raw_input("Is your interest compounded Annually, Semianually, Quarterly, Monthly, Weekly, or Daily ")
+    InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+    AnnuityDue=raw_input("Is your payment made at the beginning of each "+str(TimePeriodDue[AnnuityTime])+" or the end? Enter Beginning/End ")
+    YearFrac=Years/PeriodNoun[Freq]
+    Maturity=YearFrac*Period[InterestTime]
+    AdjustedInterest=round(InterestRate/float(Period[InterestTime]),5)
+    AnnuityPart2=(1.0+AdjustedInterest)**Maturity
+    if AnnuityDue=="Beginning":
+      AnnuityPart3=(1.0+AdjustedInterest)**(Maturity+1)
+      Annuity=(FV*AdjustedInterest)/(AnnuityPart3-(1.0+AdjustedInterest))
+    else:
+      Annuity=(FV*AdjustedInterest)/(AnnuityPart2-1.0)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "If you save $"+str(round(Annuity,2))+" "+str(AnnuityTime)+" for "+str(round(YearFrac,2))+" years you will have saved $"+str(round(FV,2))
+  AskUser= raw_input("Are you wondering what periodic payment per day/week/month/quarter/year on a current deposit you could recieve for a specified duration and interest rate? Y/N ")
+  if AskUser=='Y':
+    print "You deposited $18,000 in your saving account today. You planned to set up automatic monthly payments to your son from this deposit for the next six years. If the account bears an 8.5% interest compounded quarterly, how much would your son receive a month?"
+    CV=input("How much did you deposit? ")
+    Freq=raw_input("Would you like to enter the duration for which you will recieve payments in Years, Quarters, Months, or Weeks? ")
+    Years=input("How many years/quarters/months/weeks in the future do you want your payments to stop? ")
+    AnnuityTime=raw_input("Do you want to recieve payments Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    InterestTime=raw_input("Is your interest compounded Annually, Semianually, Quarterly, Monthly, Weekly, or Daily ")
+    InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+    AnnuityDue=raw_input("Is your payment made at the beginning of each "+str(TimePeriodDue[AnnuityTime])+" or the end? Enter Beginning/End ")
+    YearFrac=Years/PeriodNoun[Freq]
+    Maturity=YearFrac*Period[InterestTime]
+    AdjustedInterest=round(InterestRate/float(Period[InterestTime]),5)
+    AnnuityPart2=(1.0+AdjustedInterest)**-Maturity
+    if AnnuityDue=="Beginning":
+      AnnuityPart3=(1.0+AdjustedInterest)**(1.0-Maturity)
+      AnnuityPart4=(1.0+AdjustedInterest)-AnnuityPart3
+      Annuity=CV*AdjustedInterest/AnnuityPart4
+    else:
+      Annuity=CV*AdjustedInterest/(1.0-AnnuityPart2)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "If you deposited $"+str(round(CV,2))+" right now, you could recieve $"+str(round(Annuity,2))+" "+str(AnnuityTime)+" for "+str(round(YearFrac,2))+" years"
+  AskUser= raw_input("Do you have an amount you can deposit each day/week/month/quarter/year and know how much you want to save total, but don't know how long you'll have to save to reach that ammount for a given interest rate ? Y/N ")
+  if AskUser=='Y':
+    print "You want to buy equipment for $60,000 for your business. You have enough net income to save $500 at the end of each week. How long will it take you to earn that ammount if your account is paying 7.75% interest compounded quarterly?"
+    FV=input("How much do you want to ultimately recieve? ")
+    AnnuityTime=raw_input("Are you contributing Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    AnnuityInput=input("How much are you saving Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    InterestTime=raw_input("Is your interest compounded Annually, Semianually, Quarterly, Monthly, Weekly, or Daily ")
+    InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+    AnnuityDue=raw_input("Is your payment made at the beginning of each "+str(TimePeriodDue[AnnuityTime])+" or the end? Enter Beginning/End ")
+    Annuity=AnnuityInput*Period[AnnuityTime]*(1/Period[InterestTime])
+    AdjustedInterest=InterestRate/float(Period[InterestTime])
+    if AnnuityDue=="Beginning":
+      Numerator=math.log(((FV*AdjustedInterest)/(Annuity*(1.0+AdjustedInterest))+1.0))
+      Denominator=math.log(1.0+AdjustedInterest)
+    else:
+      Numerator=math.log(((FV*AdjustedInterest)/Annuity)+1.0)
+      Denominator=math.log(1.0+AdjustedInterest)
+    Time=Numerator/Denominator
+    YearFrac=round(Time/Period[InterestTime],5)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "If you deposited $"+str(round(AnnuityInput,2))+" " +str(AnnuityTime)+", you could recieve $"+str(round(FV,2))+" in "+str(round(Time,2))+" "+TimePeriod[InterestTime]+" or "+str(round(YearFrac,2))+" years"
+  AskUser= raw_input("Are you wondering how long you can recieve a periodic payment per day/week/month/quarter/year on a current deposit for a given interest rate? Y/N ")
+  if AskUser=='Y':
+    print "You deposited a lumpsome inheritance of $230,000 in an account that pays 9.25% interest compounded monthly. You want $5,000 in cash at the end of each month. For how many months would you be able to withdraw this ammount?"
+    CV=input("How much did you deposit? ")
+    AnnuityTime=raw_input("Do you want to recieve payments Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    AnnuityInput=input("How much to you want to recieve Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    InterestTime=raw_input("Is your interest compounded Annually, Semianually, Quarterly, Monthly, Weekly, or Daily ")
+    InterestRate=input("At what interest rate is it compounded? Please enter as a decimal i.e 3.5% is 0.035 ")
+    AnnuityDue=raw_input("Is your payment made at the beginning of each "+str(TimePeriodDue[AnnuityTime])+" or the end? Enter Beginning/End ")
+    Annuity=AnnuityInput*Period[AnnuityTime]*(1/Period[InterestTime])
+    AdjustedInterest=InterestRate/float(Period[InterestTime])
+    if AnnuityDue=="Beginning":
+      Numerator=math.log(1.0-((CV*AdjustedInterest)/(Annuity*(1.0+AdjustedInterest))))
+      Denominator=math.log(1.0+AdjustedInterest)
+    else:
+      Numerator=math.log(1.0-((CV*AdjustedInterest)/Annuity))
+      Denominator=math.log(1.0+AdjustedInterest)
+    Time=-(Numerator/Denominator)
+    YearFrac=Time/Period[InterestTime]
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "If you deposited $"+str(round(CV,2))+" right now you could recieve $" +str(AnnuityInput)+" "+str(AnnuityTime)+" for "+str(round(Time,2))+" "+TimePeriod[InterestTime]+" or "+str(round(YearFrac,2))+" years"
+
+def FinancialPlanning():
+  print "Financial planning is the process of implementing and coordinating a series of financial plans to achieve certain goals. "
+  print "The components are 1.) Specified values (fundamental beliefs about what is important /desirable/worthwhile/achievable) that underline the plan. 2.) Explicitly stated financial goals. 3.) Informed projections on the economy/politics. 4.) Logical & consistent financial strategies."
+
+
+def BalanceSheetMetrics():
+  print "Financial statement: compilation of personal financial data designed to provide indications of financial performance of an individual, a household, or firm. "
+  print "The two most common statements: 1.) Balance sheet: summarizes the financial situation at a single point in time through its three elements: Assets (A): the current worth of what is owned, Liabilities (L): the current worth of what is owed, Net worth (NW): the difference between assets & liabilities: NW = A - L  2.) Income - expenses statement"
+  print "Liquid assets (monetary) ??? cash, checks, savings accounts, CD???s (certificate of deposit), insurance value. Liquidity: the extent to which assets can be turned into cash. Use & purpose of liquid assets: living expenses & emergencies"
+  print "Tangible assets: home, personal valuables"
+  print "Capital assets (investments): stocks, bonds, mutual funds, life insurance"
+  print "Short term liabilities: to be paid off within a year"
+  print "Long term liabilities: to be paid off in more than a year" 
+
+
+
+def IncomeStatementMetrics():
+  print "Financial statement: compilation of personal financial data designed to provide indications of financial performance of an individual, a household, or firm. "
+  print "The two most common statements: 1.) Balance sheet: summarizes the financial situation at a single point in time through its three elements: Assets (A): the current worth of what is owned, Liabilities (L): the current worth of what is owed, Net worth (NW): the difference between assets & liabilities: NW = A - L  2.) Income - expenses statement"
+  print "Income - expenses statement: summarizes all financial transaction over a period of time (usually a year). The three elements:"
+  print "1.) Income: wages, salaries, bonuses, allowances, commissions, Social Security payments, scholarships, grants, loans, interest received, tax refunds, gifts"
+  print "2.) Expenses: 1.) Fixed: does not depend on consumption (rent, mortgage, car payment) 2.) Variable: is connected to consumption (electricity, cell phone payment, food, gas) 3.) Cross-listed: part fixed, and part variable"
+  print "3.) Net Gain (NG): the difference between income and expenses NG = I ??? E"
+
+
+def FinancialRatios():
+  print "Financial Ratios: Objective measures designed to help in making judgmental assessment on financial performance. Some key metric are 1.) Liquidity Ratios 2.) Debt Ratios 3.) Performance Ratios"
+  AskUser= raw_input("Would you like to calculate/understand your Liquidity Ratios/Debt Ratios/Performance Ratios? ")
+  if AskUser=="Liquidity Ratios":
+    AskUser= raw_input("Would you like to calculate/understand your Basic Ratio or Expanded Ratio? ")
+    if AskUser=="Basic Ratio":
+      print "Basic Ratio (BR) is a liquidity ratio involving LA: Liquid Assets ; ME: monthly expenses. "
+      print "Example: If Liquid assets are $9625, and monthly expenses are $2750, then the Basic Ratio would be: "
+      LiquidAssets=input("What are your liquid assets as stated on your balance sheet ")
+      MonthlyExpenses=input("What are your monthly expenses on your income statement ")
+      BasicRatio= float(LiquidAssets)/float(MonthlyExpenses)
+      print "---------------------------------------------------------------------------------------------------------------"
+      print "Your Basic Ratio is "+str(round(BasicRatio,2))+" months which means that liquid assets can handle monthly expenses only for "+str(round(BasicRatio,2))+" months."
+    else: 
+      print "Expanded Ratio (ER) is a liquidity ratio involving LA: Liquid Assets ; ME: monthly expenses; CA: Capital Assets "
+      print "Example: If capital assets are $17,875, Liquid assets are $9625, and monthly expenses are $2750 then the Expanded Ratio would be:"
+      LiquidAssets=input("What are your liquid assets as stated on your balance sheet ")
+      MonthlyExpenses=input("What are your monthly expenses on your income statement ")
+      CapitalAssets=input("What are your capital assets as stated on your balance sheet ")
+      ExpandedRatio=(LiquidAssets+CapitalAssets)/float(MonthlyExpenses)
+      print "---------------------------------------------------------------------------------------------------------------"
+      print "Your Expanded Ratio is "+str(round(ExpandedRatio,2))+" months which means that liquid and capital assets can handle monthly expenses only for "+str(round(ExpandedRatio,2))+" months."
+  elif AskUser=="Debt Ratios":
+    AskUser= raw_input("Would you like to calculate/understand your Solvency Ratio/Liquid-Debt Ratio/Debt-Gross Income Ratio/Debt-Disposable Income Ratio? ")
+    if AskUser=="Solvency Ratio":
+      print "The Solvency Ratio is a Debt Ratio involving TA: Total Assets ; TD: Total Debt" 
+      print "Example: If total assets are $32000, and total debt is $11500, how solvent is this situation?"
+      TotalAssets=input("What are your total assets as stated on your balance sheet? ")
+      TotalDebt=input("What are your total liabilities as stated on your balance sheet? ")
+      SolvencyRatio=float(TotalAssets)/float(TotalDebt)
+      if SolvencyRatio<1:
+        print "---------------------------------------------------------------------------------------------------------------"
+        print "Your Solvency Ratio is "+str(round(SolvencyRatio,2))+" which means you own "+str(round(SolvencyRatio,2))+" times as much as you owe, and therefore you are insolvent"
+      elif SolvencyRatio==1:
+        print "---------------------------------------------------------------------------------------------------------------"
+        print "Your Solvency Ratio is "+str(round(SolvencyRatio,2))+" which means you own the same amount as you owe, and therefore you are on the margin"
+      else: 
+        Solvency="solvent"
+        print "---------------------------------------------------------------------------------------------------------------"
+        print "Your Solvency Ratio is "+str(round(SolvencyRatio,2))+" which means you own "+str(round(SolvencyRatio,2))+" times more than you owe, and therefore you are solvent"
+
+def ProtectFraud():
+  print "Steps that may protect against fraud and privacy problems:"
+  print "1. No personal info should be revealed, especially over the phone, net, etc."
+  print "2. All purchases and ATM receipts should be kept at least for a year."
+  print "3. No credit card numbers should be revealed over the phone/net"
+  print "4. Immediate adjustment should be made on the status for any changes (esp. death, divorce, separation)"
+  print "5. Credit reports should be checked & corrected frequently"
+  print "6. Stolen/lost cards should be reported immediately "
+
+def CreditRejectionsAndReversals():
+  print "Major Reasons for Credit Rejections:"
+  print "1. Unfavorable credit history."
+  print "2. Insufficient income."
+  print "3. Irregular/temporary employment."
+  print "4. Too short period of employment."
+  print "5. Lack of credit reference."
+  print "6. Lack of previous credit."
+  print "---------------------------------------------------------------------------------------------------------------"
+  print "Steps that may reverse rejection: "
+  print "1. Talking directly to creditors & credit reporting agencies."
+  print "2. Documenting explanations."
+  print "3. Applying somewhere else."
+  print "4. Modifying applications."
+  print "5. Getting a co-singer."
+
+
+def CreditWorthiness():
+  print "Credit worthiness is a lender's criteria to assess the extent of trust in a borrower. It is translated to an index system which combines factors such as the applicant's financial history and current status  with the creditor's risk tolerance status."
+  print "How to establish good credit history:"
+  print "1. Establishing checking and savings account in good standing."
+  print "2. Keeping  rent, mortgage, utilities in good standing."
+  print "3. Obtaining an easy short-term charge account."
+  print "4. Obtaining bank cards & keeping it in good standing."
+  print "5. Obtaining small/short-term bank loan & paying it off on time"
+  print "6. Keeping student loans in good standing."
+  print "---------------------------------------------------------------------------------------------------------------"
+  # would like to somehow integrate with credit score from credit karma/ through your bank to tell you exactly what you should do to raise your individual score
+  print "A Credit Score is usually calculated in consideration of about 25 factors. Among the most important are:"
+  print "1. Length of residence."
+  print "2. Home ownership. "
+  print "3. Years at current and past jobs. "
+  print "4. Annual personal/household income. "
+  print "5. Age"
+  print "6. Banking experience (types of accounts, loans, records)."
+  print "7. Credit bureau evaluation comes in a single score called FICO Score. "
+  print "  I. Fico Score: A borrower's worthiness measure established by Fair, Isaac & Co. in late 1950's."
+  print "         i. Established a general method to evaluate the likelihood that credit users will pay their bills with no complications."
+  print "        ii. Condenses the borrower's credit history into a single quantitative index."
+  print "       iii. Accepted by FTC: Federal Trade Commission."
+  print "        iv. FICO considers:"
+  print "              A. Late payments"
+  print "              B. The amount of time credit has been established"
+  print "              C. Credit used vs. credit available"
+  print "              D. Time of current residence"
+  print "              E. Employment history"
+  print "              F. Bankruptcies  "
+  print "              G. Charge-offs"
+  print "              H. Collections"
+  print "              I. Disputes"
+  print "              J. Court judgments"
+  print "         v. Fico score is usually computed separately by three credit bureaus: 1.) Experian 2.) Trans Union 3.) Equifax Creditors may depend on one, two, or three of them (average score)."
+  
+  
+def IsMyFicoScoreGood():
+  Score=input("Please Enter Your FICO Score: ")
+  if   Score>=350 and Score<=619: QualatativeRating="Poor"
+  elif Score>=620 and Score<=659: QualatativeRating="Fair"
+  elif Score>=660 and Score<=749: QualatativeRating="Good"
+  elif Score>=750 and Score<=850: QualatativeRating="Excellent"
+  elif Score>850 or Score<350:
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "You have entered a value either below the minimum possible FICO score of 350 or above the maximum of 850"
+    return
+  print "---------------------------------------------------------------------------------------------------------------"
+  print "Your FICO credit score is "+QualatativeRating
+  #then it would scrape from your credit karma where your hard inquiries/big impacts were ect, then tell you what to do to better score.
+    
+
+def MinimumPayment(): 
+  Period={"Daily":365.0,"Monthly":12.0,"Weekly":52.0,"Quarterly":4.0,"Semiannually":2.0,"Annually":1.0}
+  TimePeriod={"Daily":"days","Monthly":"months","Weekly":"weeks","Quarterly":"quarters","Semiannually":"half years","Annually":"years"}
+  print "A Minimum Payment for a given borrowed amount is traditionally around 2-3% of the balance. It becomes popular at hard times, but what happens if we only make the minimum payment?"
+  print "Example: Consider a you took out a loan of $1500 at 21% interest, and a minimum payment of 2%. How long would it take you to ultimately pay it off paying only minimum payments? "
+  CV=input("How much did you borrow? ")
+  AnnuityTime=raw_input("Are you paying off your loan Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+  InterestRate=input("What is the interest rate on your entire loan? Please enter as a decimal i.e 3.5% is 0.035 ")
+  MinimumPercentage=input("What is the minimum payment percentage rate on your entire loan? Please enter as a decimal i.e 3.5% is 0.035 ")
+  MonthlyAPR        = InterestRate/Period[AnnuityTime]
+  MonthlyInterest   = round(CV*MonthlyAPR,0)          #should I actually round?
+  MinimumPayment    = CV*MinimumPercentage
+  PaymentToPrincipal= MinimumPayment-MonthlyInterest
+  PeriodToPay       = CV/PaymentToPrincipal
+  YearsToPay        = PeriodToPay/Period[AnnuityTime]
+  print "---------------------------------------------------------------------------------------------------------------"
+  print "Your loan of $"+str(round(CV,2))+" would take "+str(round(PeriodToPay,2))+" "+TimePeriod[AnnuityTime]+" to pay off or "+str(round(YearsToPay,2))+" years if you pay only the minimum payment"
+  print "In each payment, only $"+str(round(PaymentToPrincipal,2))+" is going to the principal loan of $"+str(round(CV,2))
+  #this is simple interest, how could I do this with compound interest, annuity due
+  
+def PrepaymentPenalty():      #not working 
+  Period={"Daily":365.0,"Monthly":12.0,"Weekly":52.0,"Quarterly":4.0,"Semiannually":2.0,"Annually":1.0}
+  PeriodNoun={"Months":12.0,"Weeks":52.0,"Quarters":4.0,"Years":1.0}
+  TimePeriod={"Daily":"days","Monthly":"months","Weekly":"weeks","Quarterly":"quarters","Semiannually":"half years","Annually":"years"}
+  TimePeriodDue={"Daily":"day","Monthly":"month","Weekly":"week","Quarterly":"quarter","Semiannually":"half year","Annually":"year"}
+  print "Prepayment penalty the is extra interest that must be payed for early repayment of a loan and is calculated accorning to the rule of 78. "
+  print "Jim has a loan of $4000 at 12% interest for 2 years. His monthly payment is $206.66. "
+  CV=input("How much did you borrow? ")
+  Freq=raw_input("Would you like to enter the duration of payback in Years, Quarters, Months, or Weeks? ")
+  Years=input("How many years/quarters/months/weeks in the future do your payments to stop? ")
+  AnnuityTime=raw_input("Do you make payments Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+  AnnuityAmmount=raw_input("How much do you have to pay each "+str(TimePeriodDue[AnnuityTime]))
+  InterestTime=raw_input("Is your interest compounded Annually, Semianually, Quarterly, Monthly, Weekly, or Daily ")
+  InterestRate=input("At what interest rate is your loan? Please enter as a decimal i.e 3.5% is 0.035 ")
+  YearFrac=Years/PeriodNoun[Freq]
+  Months=YearFrac*12
+  Accumulator=0
+  PenaltyAccumulator=0
+  for X in range(1,Months+1):
+    Accumulator=Accumulator+X
+  AdjustedInterest=InterestRate/float(Period[InterestTime])
+  TotalInterest=CV*AdjustedInterest*YearFrac
+  MonthlyInterest=TotalInterest/Months
+  MonthlyPrincipal=CV/Months
+  TotalMonthlyPayment=MonthlyInterest+MonthlyPrincipal
+  AskUser= raw_input("Did you pay off this loan early? Y/N ")
+  if AskUser=="N":
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "You will pay total interest of $"+str(round(TotalInterest,2))+" over "+str(round(YearFrac,2))+" years at payments of $"+str(round(TotalMonthlyPayment,2))+" per "+str(TimePeriodDue[AnnuityTime])
+  else:
+    AskUser= input("At what "+str(TimePeriodDue[AnnuityTime])+" did you pay off your loan?")
+    for X in range(AskUser,Months+1):
+      PenaltyCalculation=(X/float(Accumulator))*TotalInterest
+      PenaltyAccumulator=PenaltyAccumulator+PenaltyCalculation
+      NoPenaltyRemainingInterest=MonthlyInterest*(Months+1-AskUser)
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "Given you pay off your entire balance early on payment number "+str(AskUser)+" and your bank will impose a prepayment penalty, you will be charged a penalty of $"+str(round(PenaltyAccumulator,2))+" in interest instead of the $"+str(round(NoPenaltyRemainingInterest,2))+" you would have owed in interest if you didn't pay off early."
+   #TotalRanks=  
+   #lost on months/years in penalty calc
+
+ 
+def Dates():
+  print "Common Credit Dates: "
+  print "Billing Date: when finances are calculated."
+  print "Due Date: when payment is due."
+  print "Transaction Date: when financial activities occur."
+  print "Posting Date: when creditors pay for transactions."
+
+def GracePeriod():
+  print "Grace Period: an interval during which no financial penalty would occur."
+  print "In Credit: it is the period during which bills may be paid without finance charges. Usually the time between posting date and due date. "
+  print "In Savings: number of days in which deposits or withdrawals can be made and still earn interest. "
+  print "In Insurance or Mortgage: period during which late payment can be made without any lapse of policy or contract. "
+
+
+def APRvsNominal():
+  Period={"Daily":365.0,"Monthly":12.0,"Weekly":52.0,"Quarterly":4.0,"Semiannually":2.0,"Annually":1.0}
+  PeriodNoun={"Months":12.0,"Weeks":52.0,"Quarters":4.0,"Years":1.0}
+  TimePeriod={"Daily":"days","Monthly":"months","Weekly":"weeks","Quarterly":"quarters","Semiannually":"half years","Annually":"years"}
+  print "APR vs. Interest Rate:"
+  print "APR (Annual Percentage Rate): is the relative cost of credit as expressed in a percentage on an annual basis. "
+  print "The interest rate: is the nominal interest rate stated in contracts and statements."
+  print "Are they equal? It would depend on the way of calculation. "
+  print "A $2000 loan is to be paid back in a single payment after 2 years with a 9% interest"
+  CV=input("How much did you borrow? ")
+  Freq=raw_input("Would you like to enter the duration of payback in Years, Quarters, Months, or Weeks? ")
+  Years=input("How many years/quarters/months/weeks in the future do your payments to stop? ")
+  InterestTime=raw_input("Is your interest Annually, Semianually, Quarterly, Monthly, Weekly, or Daily ")
+  InterestRate=input("At what interest rate is your loan? Please enter as a decimal i.e 3.5% is 0.035 ")
+  YearFrac=Years/PeriodNoun[Freq]
+  AdjustedInterest=InterestRate/float(Period[InterestTime])
+  TotalInterest=CV*AdjustedInterest*YearFrac
+  AverageAnnualInterest=TotalInterest/YearFrac
+  AskUser= raw_input("Will you pay this loan in a single payment? Y/N ")
+  if AskUser=="Y":
+    APR=AverageAnnualInterest/CV
+    AskUser= raw_input("Was your total interest added to the principal to determine the ammount due? Y/N ")
+    if AskUser=="Y":
+      OutstandingBalance=CV+TotalInterest
+      APR=AverageAnnualInterest/OutstandingBalance
+  AskUser= raw_input("Does your interest have to be paid up front? Y/N ")
+  if AskUser=="Y":
+    DiscountedBalance=CV-TotalInterest
+    APR=AverageAnnualInterest/float(DiscountedBalance)
+  AskUser= raw_input("Was your total interest added to the principal to determine the ammount due and to be paid off in installments? Y/N ")
+  if AskUser=="Y":
+    AnnuityTime=raw_input("Are you paying off your loan Annually, Semianually, Quarterly, Monthly, Weekly, or Daily? ")
+    AllPayments=Period[AnnuityTime]*YearFrac
+    APRNumerator=(Period[AnnuityTime]*TotalInterest)*(95*AllPayments+9)
+    APRDenominator=(12*AllPayments)*(AllPayments+1)*(4*CV+TotalInterest)
+    APR=APRNumerator/APRDenominator
+    print APR
+  if APR==InterestRate:
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "The APR and the interest rate are the same at "+str(round(APR,2))+"%"
+  else: 
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "For the interest rate of "+str(round(InterestRate,4))+"% the equivalent APR for this particular loan is "+str(round(APR,4))+"%"
+
+def CanIAffordThat():
+  TaxTimeDictionary={"Monthly":12,"Biweekly":24,"Weekly":52}
+  MonthlyMonthDictionary={"Monthly":"every month","Biweekly":"every other week","Weekly":"every week"}
+  print "Standard methods for assessing affordability:"
+  AskUser= raw_input("Would you like to use the ratio of non-mortgage debt repayment to disposable income method Y/N ")
+  if AskUser=="Y":
+    print "Suppose all your debt repayments total $1800 a month, including $1200 mortgage. Gross income is $72,000/year, and taxes are $1500 per month. Can I afford these bills"
+    MonthlyBills=input("What are your approximate bills for this month? ")
+    GrossIncome=input("What is your gross salary? " )
+    PayFreq= raw_input("Are you paid Monthly/Biweekly/Weekly ")
+    Tax=input("How much do you pay in taxes "+MonthlyMonthDictionary[PayFreq]+" ? It should printed on your payroll stub ")
+    AnnualTaxes=Tax*TaxTimeDictionary[PayFreq]
+    MonthlyDisposableIncome=(GrossIncome-AnnualTaxes)/12.0
+    Mortgage=input("How much do you pay on your mortgage/pay in rent per month ")
+    NonMortgageDebtPayment=MonthlyBills-Mortgage
+    Affordability=NonMortgageDebtPayment/float(MonthlyDisposableIncome)
+    if Affordability>0.16:
+      print "---------------------------------------------------------------------------------------------------------------"
+      print "You are spending too much"
+    else: 
+      print "---------------------------------------------------------------------------------------------------------------"
+      print "You can afford all your debts"
+   
+def AssetsLiabilities():
+  print 2
+#caulculate your netwoth, assets and liabiltiies
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+
+#Now we will be developing the risk taking, quanative methods protion of this app
+
+
+def Main():
+  print "Affective Decision System vs. DeliberativeDecision System"
+  print "Our Goal: Develop the deliberative decision system so you can make better decisions."
+  print "Decisions do not arise in nature, they are declared by humans. They are reactive or proactive"
+  print "What is a Decision? A decision is a choice between two or more alternatives that involves an irrevocable allocation of resources. Not a decision: I have decided to ace the test. (A mental commitment/intention, NOT a decision) Decision: I have decided to diet, and I have thrown away the ice cream in the freezer. (A decision since some resource (ice-cream) is committed)"
+  print "You have control over your choice/decision, but notthe consequences"
+  print "Just because you make a good decision doesn't mean you'll have a good outcome"
+  print "Decisions are often difficult to make due to UNCERTAINTY"
+  
+  
+def HowDoIMakeAGoodDecision():
+  print "What Constitutes a Good Decision?"
+  print "1. What consequences do I care about?"
+  print "2. What are my choices?"
+  print "3. What is that I am deciding?"
+  print "4. Will I really take action?"
+  print "5. Am I thinking clearly about this?"
+  print "6. What do I need to know?"
+  
+ 
+def ThumbtackMedallion():
+  print "1. Probabilities can be objective (randomization device or relative frequency) or subjective (belief)"
+  print "    a. Decision analysis is really focused on subjective probabilities and things that impact beliefs"
+  print "2. Sunk costs should be ignored"
+  print "3. Value of Clairvoyance/Perfect Information:"
+  print "    a. The most you are willing to pay (WTP) to remove uncertainty"
+  print "    b. WTP for imperfect information should be less than this"
+  print "4. Good decisions do not guarantee good outcomes"
+
+
+def ValueOfClairvoyance():#needs work
+  print "Suppose that at $45, you were the high bidder for a certificate auctioned off at a charity event. After winning the certificate, you determine that the least you would be willing to sell the certificate for is $75. "
+  print "Recall, the owner of the certificate will get $100 if he/she calls the outcome of the thumptacktoss correctly and $0 otherwise. The instructor offers to tell you truthfully how the thumbtack has landed before you "
+  print "make your call. What is the value of clairvoyance?"
+  print "Value of Clairvoyance (100)-WTP (45)=55"
+  Value=input("What would you get if you were right? ")
+  WTP=input("What did you get it for? ")
+  ValueOfClairvoyance=Value-WTP
+  print "---------------------------------------------------------------------------------------------------------------"
+  print "You  should sell it for no more tha?????"+str(round(ValueOfClairvoyance,2))
+
+
+def SunkCostPrinciple(): 
+  print "Sunk Cost: Expenditure that has been made in the past and cannot be recovered"
+  print "The Sunk Cost Principle: A decision is made by considering only the possible futures that it might generate. That is, sunk costs should not influence current or future economic decisions."
+  print "Notes --- Learning from experience or limiting your future actions is, howdever, relevant to current decisions;"
+  print "Notes --- Records of past purchases, in most cases, do not contribute to current decisions (thus, using them would violate the Sunk Cost principle) except for taxation purpose (in this case, does not violate)"
+  print "Opportunity Cost vs. Sunk Cost"
+  print "Opportunity Cost is the value of the next-highest-valued alternative use of that resource."
+  print "Sunk Cost is a cost that has already been incurred and cannot be recovered. A sunk cost differs from future costs that a business may face, such as decisions about inventory purchase costs or product pricing. "
+  print "Sunk costs (past costs) are excluded from future business decisions because the cost will be the same regardless of the outcome of a decision."
+  
+def WTPvsWTA():#needs work
+  print "WTP/WTA "
+  print "I'll use some terms technical terms, both like an engineer would and that of an economist. I???ll teach you both versions!" 
+  print "1. Personal Indifferent Selling Price (PISP)[Engineering] ??? We call this willingness-to-accept (WTA)[Economics]: The price where you are indifferent between keeping an item and selling it"
+  print "2. Personal Indifferent Buying Price  (PIBP)[Engineering] ??? We call this willingness-to-pay    (WTP)[Economics]: The price where you are indifferent between not owning an item and buying it"
+  print "3. Your personal valuation will generally not be the same as the market valuation (aka value in exchange)"
+  WTP=input("What is the market price? ")
+  WTA=input("How much are you willing to pay? ") 
+  if WTP==WTA:
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "Purchase Item"
+  else:
+    print "---------------------------------------------------------------------------------------------------------------"
+    print "Don't purchase"
+#  print "Not sure: Where WTP=WTA, a market price and quantity are found. This is akin to supply and demand. If the price were higher, the WTP would much higher than the WTA."
+
+ 
+def CreatingDistinctionsElementalPossiblities():
+  Dictionary={1:"first",2:"second",3:"third",4:"fourth",5:"fifth",6:"sixth",7:"seventh",8:"eight",9:"ninth",10:"tenth"}
+  EmptyDictionary={}
+  ConditionalProbabilityDictionary={}
+  print "A distinction is a division of reality into possibilities"
+  print "We are looking at choices over possible futures"
+  print '1. Concepts underlying how we understand possibilities but no "chance" yet'
+  print "2. We need to characterize each alternative"
+  print "3. To do this, we need to create distinctions "
+  print "Simple distinction: Only two possibilities "
+  print "Ex. The distinction of the results of a coin toss has 2 possibilities: Heads or Tails"
+  print "Ex. The distinction of High School Graduate has 2 possibilities: A HS Graduate or Not a HS graduate."
+  print "---------------------------------------------------------------------------------------------------------------"
+  EventList=[]
+  ElementalPossibilitiesList=[]
+  ElementalProbabilitiesList=[]
+  ProbabilitiesList=[]
+  Counter=0
+  ConditionalCounter=0
+  Degrees=input("How many types of outcomes are there? If you are looking at the outcome of a coin toss, enter 1. If you are looking at the outcome of a game that involves a coin toss and rolling a dice, enter 2 and so on ")
+  for X in range(Degrees):
+    Event=raw_input("Please give a description of the "+Dictionary[X+1]+" portion of your distinction. Ex. Is it raining or not? Are you happy or not? Are you rolling a dice? Are you driving slow, medium, or fast? etc.")
+    IndividualEventList=[Event]
+    EquivalentLikelihoodList=[]
+    NonEquivalentLikelihoodList=[]
+    AskUser=raw_input("Are all the outcomes equally likely for this type? Y/N ")
+    if AskUser=="Y":
+      AskUser=raw_input("Enter a possible outcome for the "+Dictionary[X+1]+" type then press enter. Continue until there are no more possible outcomes for that type and then hit enter. ")
+      while AskUser!="":
+        IndividualEventList=IndividualEventList+[AskUser]
+        AskUser=raw_input("Enter a possible outcome for the "+Dictionary[X+1]+" type then press enter. Continue until there are no more possible outcomes for that type and then hit enter. ")
+      else:
+        EventList=EventList+[IndividualEventList]
+        Likelihood=1/((len(IndividualEventList))-1.0)
+        for X in range(len(IndividualEventList)-1.0):
+          EquivalentLikelihoodList=EquivalentLikelihoodList+[Likelihood]
+        ProbabilitiesList=ProbabilitiesList+[EquivalentLikelihoodList]
+    else:
+      AskUser=raw_input("Enter a possible outcome for the "+Dictionary[X+1]+" type then press enter. Continue until there are no more possible outcomes for that type and then hit enter. ")
+      NonEquivalentLikelihoodList=NonEquivalentLikelihoodList+[input("How likely is this event to occur? Ex. If there is a 70% chance it is raining then enter 0.7: ")]
+      while AskUser!="":
+        IndividualEventList=IndividualEventList+[AskUser]
+        AskUser=raw_input("Enter a possible outcome for the "+Dictionary[X+1]+" type then press enter. Continue until there are no more possible outcomes for that type and then hit enter. ")
+        if AskUser!="":
+          NonEquivalentLikelihoodList=NonEquivalentLikelihoodList+[input("How likely is this event to occur? Ex. If there is a 70% chance it is raining then enter 0.7: ")]
+      else:
+        EventList=EventList+[IndividualEventList]
+        ProbabilitiesList=ProbabilitiesList+[NonEquivalentLikelihoodList]
+  print "---------------------------------------------------------------------------------------------------------------"
+  print "The distinction you are making has "+str(Degrees)+" degrees and the possibilities are :"
+  LongestList=max(EventList,key=len)
+  LongestProb=max(ProbabilitiesList,key=len)
+  for X in LongestList[1:]:
+    if len(EventList)==4:
+      for I in range(1,len(EventList[1])): #1-2
+        for N in range(1,len(EventList[3])):
+          for K in range(1,len(EventList[2])):
+            ElementalPossibilities=X+EventList[1][I]+EventList[2][K]+EventList[3][N]
+            print ElementalPossibilities
+            ElementalPossibilitiesList=ElementalPossibilitiesList+[ElementalPossibilities]
+    elif len(EventList)==3:
+      for I in range(1,len(EventList[1])): #1-2
+        for K in range(1,len(EventList[2])):        
+           ElementalPossibilities=X+EventList[1][I]+EventList[2][K]
+           print ElementalPossibilities
+           ElementalPossibilitiesList=ElementalPossibilitiesList+[ElementalPossibilities]
+    elif len(EventList)==2:
+      for I in range(1,len(EventList[1])): #1-2     
+        ElementalPossibilities=X+EventList[1][I]
+        print ElementalPossibilities
+        ElementalPossibilitiesList=ElementalPossibilitiesList+[ElementalPossibilities]
+  print "Degrees show all possibilities, they are Mutually exclusive and Collectively exhaustive"
+  for X in LongestProb:
+    if len(ProbabilitiesList)==4:
+      for I in range(0,len(ProbabilitiesList[1])): #1-2
+        for N in range(0,len(ProbabilitiesList[3])):
+          for K in range(0,len(ProbabilitiesList[2])):
+            ElementalProbabilities=X*ProbabilitiesList[1][I]*ProbabilitiesList[2][K]*ProbabilitiesList[3][N]
+            ElementalProbabilitiesList=ElementalProbabilitiesList+[ElementalProbabilities]
+    elif len(ProbabilitiesList)==3:
+      for I in range(0,len(ProbabilitiesList[1])): #1-2
+        for K in range(0,len(ProbabilitiesList[2])):        
+          ElementalProbabilities=float(X)*float(ProbabilitiesList[1][I])*float(ProbabilitiesList[2][K])
+          ElementalProbabilitiesList=ElementalProbabilitiesList+[ElementalProbabilities]
+          ConditionalProbabilityList4=ElementalProbabilitiesList
+    elif len(ProbabilitiesList)==2:
+      for I in range(0,len(ProbabilitiesList[1])): #1-2     
+        ElementalProbabilities=X*ProbabilitiesList[1][I]
+        ElementalProbabilitiesList=ElementalProbabilitiesList+[ElementalProbabilities]
+        ConditionalProbabilityList3=ElementalProbabilitiesList
+  for X in ElementalProbabilitiesList:
+    EmptyDictionary[ElementalPossibilitiesList[Counter]]=X
+    ConditionalProbabilityDictionary[ElementalPossibilitiesList[ConditionalCounter]]=X
+    Counter=Counter+1
+  print "---------------------------------------------------------------------------------------------------------------"
+  AskUser=raw_input("Are you interested in the likelihood of a given "+str(Degrees)+" specific events occuring? Y/N ")
+  if AskUser=="Y":
+    ElementalChoice=EmptyDictionary[raw_input("For ex. if you are looking for the probability you will roll a 6 and coin is Heads, type 6H ")]
+    print ElementalChoice
+  if len(ProbabilitiesList)!=2:
+    AskUser=raw_input("Are you wondering the proability of a certain one event given another event has occured? Y/N ")
+    if AskUser=="Y":
+      print "For example, if you are wondering what the probability of "+str(EventList[0][1])+str(EventList[1][1])+" enter "+str(EventList[0][1])+str(EventList[1][1])
+      if len(ProbabilitiesList)==4:
+        for I in range(0,len(ProbabilitiesList[1])): #1-2
+          for K in range(0,len(ProbabilitiesList[2])):        
+            ElementalProbabilities=float(X)*float(ProbabilitiesList[1][I])*float(ProbabilitiesList[2][K])
+            ElementalProbabilitiesList=ElementalProbabilitiesList+[ElementalProbabilities]
+      elif len(ProbabilitiesList)==3:
+        for I in range(0,len(ProbabilitiesList[1])): #1-2     
+          ElementalProbabilities=X*ProbabilitiesList[1][I]
+          ElementalProbabilitiesList=ElementalProbabilitiesList+[ElementalProbabilities]
+    print ElementalProbabilitiesList
+    while ConditionalCounter<len(ElementalProbabilitiesList):
+      ConditionalProbabilityDictionary[ElementalPossibilitiesList[ConditionalCounter]]=ElementalProbabilitiesList[ConditionalCounter]
+      ConditionalCounter=ConditionalCounter+1
+        
+        
+        
+    ElementalChoice=AskUser=ConditionalProbabilityDictionary[raw_input("For example, if you are wondering what the probability of "+str(EventList[0][1])+str(EventList[1][1])+" enter "+str(EventList[0][1])+str(EventList[1][1]))]
+    print ElementalChoice
+   #works for up to 4 lists, with the first one being the longest. Need to :
+   #sort the list of lists (event list) from longest to shortest
+   #Allow for up to 10 events, but allow for less
+  
+  
+  
+def QuantProbability():
+  print "Probabilities: the likelihood of occurrence of an event. Subjective Probabilities: This is the focus of most decision scientists"
+  print "Subjective Probabilities: The probabilities are assigned by people and reflect their personal experience"
+
+  
