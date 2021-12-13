@@ -9,19 +9,8 @@ import statsmodels.formula.api as smf
 import operator
 import itertools
 from scipy.stats import chi2
-#df_adv = pd.read_csv("EdensSKLEARNY.csv")
-#df_adv = pd.read_csv("EdenCategorical.csv")
-#df_adv = pd.read_csv("Eden2Categorical.csv")
-df_adv = pd.read_csv("Eden2CategoricalTest.csv")
 #df_adv = pd.read_csv("EdenTesting.csv")
-#df_adv = pd.read_csv("FinalRun.csv")
-#df_adv = pd.read_csv("Finals.csv")
-#df_adv = pd.read_csv("Finals1.csv")
-#df_adv = pd.read_csv("moretest.csv")
-#df_adv = pd.read_csv("gettingmad.csv")
-#df_adv = pd.read_csv("mess.csv")
-#df_adv = pd.read_csv("last.csv")
-#df_adv = pd.read_csv("withdist.csv")
+
 CurrentDate = datetime.datetime.now()
 CurrentYear=CurrentDate.year
 SeasonDictionary={'Monthly': 12, 'Quarterly': 4, 'Yearly':1}
@@ -33,9 +22,6 @@ MonthDictionary={1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7
 QuarterDictionary={1:"Quarter 1",2:"Quarter 2",3:"Quarter 3",4:"Quarter 4"}
 
 #Need to work on what to do if users enter a categorical variable or a non int/float like $,
-#Need to make a test set for accurateness, but don't know how to generate a disturbance
-#norm.inv , rand()
-
 
 #Finding the target dependent variable
 def FindingDependent():
@@ -175,14 +161,6 @@ def ReplaceMultiple(mainString, toBeReplaces, newString):
     return  mainString
 
 
-#def MyReplacer(df,ListBadValues,Replacement):
-   # for i in ListBadValues:
-      #  if Value in df:
-        #   True= df.str.replace('$','')
-
-
-
-
 
 #Fixing it
 def FixingBehavior(Misbehavior):
@@ -190,32 +168,12 @@ def FixingBehavior(Misbehavior):
     TextVariables=CategoricalLists[1]
     BadCharacters=['$',',']
     for X in Misbehavior:
-        #print(X)
         if X not in TextVariables:
             print(X)
             for i in BadCharacters:
                 X=df_adv[str(X)].str.replace(i,'')
                 print(X)
-            #Variable=str(X)
-            #df_adv[X].astype('int64')
-            #Der=ReplaceMultiple(df_adv, ['$',','], '')
-           # print(Der)
-            #print([df_adv[str(X)])
             print(df_adv['Price'].isin(['$']))
-            #if df_adv[str(X)].str.replace('$','')
-          #  except:
-             #   X=df_adv[str(X)].str.replace(',','')
-           # print(X)
-            #for X in 
-            #df_adv.Price=[x[1:] for x in df_adv.Price]
-            #print(df_adv.Price)
-            #print(df_adv['Price'])
-           # print (X)
-
-
-
-    #AskUser=input("Do you h
-    #ser.astype('int64')
     
 
 
@@ -333,8 +291,6 @@ def CreatingDummies(N,Period):
                     df_adv[NamingDumbies]=ModifiedSequence
                     N=int(N)+1
     return(DummyNames)
-
-
 
 
 
