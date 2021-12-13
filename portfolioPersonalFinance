@@ -1,6 +1,6 @@
 import math
 #check interet rate rounding to 12.27 for ex
-#work it out so questions change whether you are talking about a loan, deposit, investment etc
+##work it out so questions change whether you are talking about a loan, deposit, investment etc
 
 def  Main():
   print "The time value of money refers to the bidirectional nature of money value as it fluctuates up and down over the time span. "
