@@ -1597,7 +1597,7 @@ from random import random
 
 
 #if BEST<RMSELASTICNET:
-  #  print("So far your best model is "+str(BESTNAME))
+  ##  print("So far your best model is "+str(BESTNAME))
 #else:
  #   BEST=RMSELASTICNET
   #  BESTNAME="Elastic Net"
